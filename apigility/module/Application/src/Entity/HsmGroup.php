@@ -1,66 +1,96 @@
 <?php
+
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Description of Hsm
- * @ORM\Entity
+ * HsmGroup
+ *
  * @ORM\Table(name="hsm_group")
- * @author Paulo Filipe Macedo dos Santos <paulo.santos@solutinet.com.br>
+ * @ORM\Entity
  */
 class HsmGroup
 {
-
-    const STATUS_ENABLED = 1;
-    const STATUS_DISABLED = 0;
-
     /**
-     * @var integer
+     * @var int
      *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="id", type="integer", precision=0, scale=0, nullable=false, unique=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    protected $id;
+    private $id;
 
     /**
-     * @ORM\Column(name="name",type="string")
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255, precision=0, scale=0, nullable=false, unique=false)
      */
-    protected $name;
+    private $name;
 
     /**
-     * @ORM\Column(name="status",type="integer")
+     * @var int
+     *
+     * @ORM\Column(name="status", type="integer", precision=0, scale=0, nullable=false, unique=false)
      */
-    protected $status;
+    private $status;
 
+
+    /**
+     * Get id.
+     *
+     * @return int
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * Set name.
+     *
+     * @param string $name
+     *
+     * @return HsmGroup
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name.
+     *
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
+    /**
+     * Set status.
+     *
+     * @param int $status
+     *
+     * @return HsmGroup
+     */
     public function setStatus($status)
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status.
+     *
+     * @return int
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 }

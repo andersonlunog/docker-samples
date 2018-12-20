@@ -11,7 +11,7 @@
       "log": true,
       "externalConsole": false,
       "pathMappings": {
-        "/var/www": "/home/nogueira/Estudos/MeuZendApigility"
+        "/var/www": "/home/nogueira/Estudos/docker-samples/apigility"
       },
       "ignore": [
           "**/vendor/**/*.php"

@@ -1,129 +1,223 @@
 <?php
+
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Description of Hsm
+ * Hsm
+ *
+ * @ORM\Table(name="hsm", indexes={@ORM\Index(name="IDX_8E94745A1F033999", columns={"id_hsm_group"})})
  * @ORM\Entity
- * @ORM\Table(name="hsm")
- * @author Paulo Filipe Macedo dos Santos <paulo.santos@solutinet.com.br>
  */
 class Hsm
 {
-
-    const STATUS_ENABLED = 1;
-    const STATUS_DISABLED = 0;
-
     /**
-     * @var integer
+     * @var int
      *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="id", type="integer", precision=0, scale=0, nullable=false, unique=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    protected $id;
+    private $id;
 
     /**
-     * @ORM\Column(name="status",type="integer")
+     * @var int
+     *
+     * @ORM\Column(name="status", type="integer", precision=0, scale=0, nullable=false, unique=false)
      */
-    protected $status;
+    private $status;
 
     /**
-     * @ORM\Column(name="name",type="string")
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255, precision=0, scale=0, nullable=false, unique=false)
      */
-    protected $name;
+    private $name;
 
     /**
-     * @ORM\Column(name="ip",type="string", nullable=true)
+     * @var string|null
+     *
+     * @ORM\Column(name="ip", type="string", length=255, precision=0, scale=0, nullable=true, unique=false)
      */
-    protected $ip;
+    private $ip;
 
     /**
-     * @ORM\Column(name="port",type="string", nullable=true)
+     * @var string|null
+     *
+     * @ORM\Column(name="port", type="string", length=255, precision=0, scale=0, nullable=true, unique=false)
      */
-    protected $port;
+    private $port;
 
     /**
-     * @ORM\Column(name="site",type="string", nullable=true)
+     * @var string|null
+     *
+     * @ORM\Column(name="site", type="string", length=255, precision=0, scale=0, nullable=true, unique=false)
      */
-    protected $site;
+    private $site;
 
     /**
-     * @var HsmGroup
-     * @ORM\ManyToOne(targetEntity="HsmGroup")
-     * @ORM\JoinColumn(name="id_hsm_group", referencedColumnName="id")
+     * @var \Application\Entity\HsmGroup
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Entity\HsmGroup")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_hsm_group", referencedColumnName="id", nullable=true)
+     * })
      */
-    protected $hsmGroup;
-    
+    private $idHsmGroup;
+
+
+    /**
+     * Get id.
+     *
+     * @return int
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * Set status.
+     *
+     * @param int $status
+     *
+     * @return Hsm
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status.
+     *
+     * @return int
+     */
     public function getStatus()
     {
         return $this->status;
     }
 
+    /**
+     * Set name.
+     *
+     * @param string $name
+     *
+     * @return Hsm
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name.
+     *
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * Set ip.
+     *
+     * @param string|null $ip
+     *
+     * @return Hsm
+     */
+    public function setIp($ip = null)
+    {
+        $this->ip = $ip;
+
+        return $this;
+    }
+
+    /**
+     * Get ip.
+     *
+     * @return string|null
+     */
     public function getIp()
     {
         return $this->ip;
     }
 
+    /**
+     * Set port.
+     *
+     * @param string|null $port
+     *
+     * @return Hsm
+     */
+    public function setPort($port = null)
+    {
+        $this->port = $port;
+
+        return $this;
+    }
+
+    /**
+     * Get port.
+     *
+     * @return string|null
+     */
     public function getPort()
     {
         return $this->port;
     }
 
+    /**
+     * Set site.
+     *
+     * @param string|null $site
+     *
+     * @return Hsm
+     */
+    public function setSite($site = null)
+    {
+        $this->site = $site;
+
+        return $this;
+    }
+
+    /**
+     * Get site.
+     *
+     * @return string|null
+     */
     public function getSite()
     {
         return $this->site;
     }
 
-    public function getHsmGroup(): HsmGroup
+    /**
+     * Set idHsmGroup.
+     *
+     * @param \Application\Entity\HsmGroup|null $idHsmGroup
+     *
+     * @return Hsm
+     */
+    public function setIdHsmGroup(\Application\Entity\HsmGroup $idHsmGroup = null)
     {
-        return $this->hsmGroup;
+        $this->idHsmGroup = $idHsmGroup;
+
+        return $this;
     }
 
-    public function setId($id)
+    /**
+     * Get idHsmGroup.
+     *
+     * @return \Application\Entity\HsmGroup|null
+     */
+    public function getIdHsmGroup()
     {
-        $this->id = $id;
-    }
-
-    public function setStatus($status)
-    {
-        $this->status = $status;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    public function setIp($ip)
-    {
-        $this->ip = $ip;
-    }
-
-    public function setPort($port)
-    {
-        $this->port = $port;
-    }
-
-    public function setSite($site)
-    {
-        $this->site = $site;
-    }
-
-    public function setHsmGroup(HsmGroup $hsmGroup)
-    {
-        $this->hsmGroup = $hsmGroup;
+        return $this->idHsmGroup;
     }
 }
-    

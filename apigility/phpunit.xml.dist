@@ -7,6 +7,9 @@
         <testsuite name="zf-apigility-skeleton">
             <directory>./module/Application/test</directory>
         </testsuite>
+        <testsuite name="Aplicacao">
+            <directory>./module/Aplicacao/test</directory>
+        </testsuite>
     </testsuites>
 
     <filter>
