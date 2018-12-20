@@ -1,0 +1,45 @@
+version: "2"
+
+networks:
+  some-net:
+    driver: bridge
+
+services:
+
+  apigility:
+    container_name: apigility
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www
+    environment:
+      databaseHost: db
+      databasePort: 3306
+      databaseUser: root
+      databasePwd: passdev
+      databaseName: test_db
+      XDEBUG_CONFIG: remote_host=192.168.2.94 remote_port=9000 remote_enable=1
+    # links:
+    #   - "db"
+    networks:
+      - some-net
+
+  db:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    container_name: mysql
+    volumes:
+      - ./data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: passdev
+      MYSQL_DATABASE: test_db
+      MYSQL_USER: devuser
+      MYSQL_PASSWORD: devpass
+      # - MYSQL_ROOT_PASSWORD=passdev
+      # - MYSQL_DATABASE=teste_db
+    networks:
+      - some-net

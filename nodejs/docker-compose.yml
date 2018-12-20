@@ -1,0 +1,61 @@
+version: '2'
+
+networks:
+  node-net:
+    driver: bridge
+
+services:
+
+  nodejs:
+    image: node:10
+    container_name: nodejs
+    # depends_on:
+    #   - mongo
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: node_modules/.bin/nodemon --exec npm start
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+    ports:
+      - 3000:3000
+    volumes:
+     - .:/home/app/nodejs
+     - /home/app/nodejs/node_modules
+    networks:
+      - node-net
+     
+  mongo:
+    image: mongo
+    container_name: mongodb
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - ./data/db:/data/db
+    networks:
+      - node-net
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    depends_on:
+      - mongo
+    restart: always
+    ports:
+      - 8081:8081
+    networks:
+      - node-net
+
+  rabbitmq:
+    image: bitnami/rabbitmq:latest
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - node-net
+    environment:
+      RABBITMQ_USERNAME: admin
+      RABBITMQ_PASSWORD: admin
