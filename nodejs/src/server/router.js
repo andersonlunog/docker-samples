@@ -45,9 +45,10 @@ module.exports = (app) => {
     }).catch(console.warn);
   });
 
-  app.post("/api/testpost", (req, res) => {
+  app.post("/api/receiveMessage", (req, res) => {
     // console.log(req.body);
     console.log("Header da Requisicao:\r\n" + JSON.stringify(req.headers, null, '\t'));
+    console.log("Corpo da Requisicao:\r\n" + JSON.stringify(req.body, null, '\t'));
     res.send({
       "message": "Respondido pelo node",
       "data": req.body

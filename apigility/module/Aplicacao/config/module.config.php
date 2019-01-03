@@ -30,6 +30,15 @@ return [
                     ],
                 ],
             ],
+            'aplicacao.rest.register-publisher' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/api/register-publisher[/:register_publisher_id]',
+                    'defaults' => [
+                        'controller' => 'Aplicacao\\V1\\Rest\\RegisterPublisher\\Controller',
+                    ],
+                ],
+            ],
         ],
     ],
     'zf-versioning' => [
@@ -37,6 +46,7 @@ return [
             0 => 'aplicacao.rest.doctrine.user',
             1 => 'aplicacao.rpc.http-client',
             2 => 'aplicacao.rest.doctrine.oauth-users',
+            3 => 'aplicacao.rest.register-publisher',
         ],
     ],
     'zf-rest' => [
@@ -85,12 +95,30 @@ return [
             'collection_class' => \Aplicacao\V1\Rest\OauthUsers\OauthUsersCollection::class,
             'service_name' => 'OauthUsers',
         ],
+        'Aplicacao\\V1\\Rest\\RegisterPublisher\\Controller' => [
+            'listener' => \Aplicacao\V1\Rest\RegisterPublisher\RegisterPublisherResource::class,
+            'route_name' => 'aplicacao.rest.register-publisher',
+            'route_identifier_name' => 'register_publisher_id',
+            'collection_name' => 'register_publisher',
+            'entity_http_methods' => [],
+            'collection_http_methods' => [
+                0 => 'POST',
+                1 => 'GET',
+            ],
+            'collection_query_whitelist' => [],
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => \Aplicacao\V1\Rest\RegisterPublisher\RegisterPublisherEntity::class,
+            'collection_class' => \Aplicacao\V1\Rest\RegisterPublisher\RegisterPublisherCollection::class,
+            'service_name' => 'RegisterPublisher',
+        ],
     ],
     'zf-content-negotiation' => [
         'controllers' => [
             'Aplicacao\\V1\\Rest\\User\\Controller' => 'HalJson',
             'Aplicacao\\V1\\Rpc\\HttpClient\\Controller' => 'Json',
             'Aplicacao\\V1\\Rest\\OauthUsers\\Controller' => 'HalJson',
+            'Aplicacao\\V1\\Rest\\RegisterPublisher\\Controller' => 'HalJson',
         ],
         'accept_whitelist' => [
             'Aplicacao\\V1\\Rest\\User\\Controller' => [
@@ -108,6 +136,11 @@ return [
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ],
+            'Aplicacao\\V1\\Rest\\RegisterPublisher\\Controller' => [
+                0 => 'application/vnd.aplicacao.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
         ],
         'content_type_whitelist' => [
             'Aplicacao\\V1\\Rest\\User\\Controller' => [
@@ -119,6 +152,10 @@ return [
                 1 => 'application/json',
             ],
             'Aplicacao\\V1\\Rest\\OauthUsers\\Controller' => [
+                0 => 'application/vnd.aplicacao.v1+json',
+                1 => 'application/json',
+            ],
+            'Aplicacao\\V1\\Rest\\RegisterPublisher\\Controller' => [
                 0 => 'application/vnd.aplicacao.v1+json',
                 1 => 'application/json',
             ],
@@ -146,6 +183,18 @@ return [
             \Aplicacao\V1\Rest\OauthUsers\OauthUsersCollection::class => [
                 'entity_identifier_name' => 'id',
                 'route_name' => 'aplicacao.rest.doctrine.oauth-users',
+                'is_collection' => true,
+            ],
+            \Aplicacao\V1\Rest\RegisterPublisher\RegisterPublisherEntity::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'aplicacao.rest.register-publisher',
+                'route_identifier_name' => 'register_publisher_id',
+                'hydrator' => \Zend\Hydrator\ArraySerializable::class,
+            ],
+            \Aplicacao\V1\Rest\RegisterPublisher\RegisterPublisherCollection::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'aplicacao.rest.register-publisher',
+                'route_identifier_name' => 'register_publisher_id',
                 'is_collection' => true,
             ],
         ],
@@ -187,6 +236,9 @@ return [
         ],
         'Aplicacao\\V1\\Rest\\OauthUsers\\Controller' => [
             'input_filter' => 'Aplicacao\\V1\\Rest\\OauthUsers\\Validator',
+        ],
+        'Aplicacao\\V1\\Rest\\RegisterPublisher\\Controller' => [
+            'input_filter' => 'Aplicacao\\V1\\Rest\\RegisterPublisher\\Validator',
         ],
     ],
     'input_filter_specs' => [
@@ -297,6 +349,15 @@ return [
                 ],
             ],
         ],
+        'Aplicacao\\V1\\Rest\\RegisterPublisher\\Validator' => [
+            0 => [
+                'required' => true,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'channel',
+                'field_type' => 'String',
+            ],
+        ],
     ],
     'controllers' => [
         'factories' => [
@@ -330,6 +391,12 @@ return [
                     'DELETE' => false,
                 ],
             ],
+        ],
+    ],
+    'service_manager' => [
+        'factories' => [
+            \Aplicacao\V1\Rest\RegisterPublisher\RegisterPublisherResource::class => \Aplicacao\V1\Rest\RegisterPublisher\RegisterPublisherResourceFactory::class,
+            'MQManagerFactory' => \Aplicacao\Factories\MQManagerFactory::class,
         ],
     ],
 ];

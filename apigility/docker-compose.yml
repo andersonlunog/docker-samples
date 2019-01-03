@@ -43,3 +43,15 @@ services:
       # - MYSQL_DATABASE=teste_db
     networks:
       - some-net
+
+  rabbitmq:
+    image: bitnami/rabbitmq:latest
+    container_name: rabbitmq_php
+    ports:
+      - 5682:5672
+      - 15682:15672
+    networks:
+      - some-net
+    environment:
+      RABBITMQ_USERNAME: admin
+      RABBITMQ_PASSWORD: admin

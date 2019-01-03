@@ -24,13 +24,24 @@
 FROM php:7.2-apache
 
 RUN apt-get update \
- && apt-get install -y git zlib1g-dev libmcrypt-dev libmhash-dev libicu-dev g++ \
-    libfreetype6-dev libjpeg62-turbo-dev libmcrypt-dev \
+ && apt-get install -y \
+   git \
+   zlib1g-dev \
+   libmcrypt-dev \
+   libmhash-dev \
+   libicu-dev \
+   g++ \
+   libfreetype6-dev \
+   libjpeg62-turbo-dev \
+   libxml2-dev \
  && pecl install redis \
  && docker-php-ext-configure intl \
  && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+ && docker-php-ext-configure bcmath --enable-bcmath \
+ && docker-php-ext-configure soap --enable-soap \
  && docker-php-ext-install zip pdo_mysql hash intl gd \
- && docker-php-ext-enable redis hash \
+ && docker-php-ext-install bcmath soap \
+ && docker-php-ext-enable redis hash bcmath \
  && a2enmod rewrite \
  && sed -i 's!/var/www/html!/var/www/public!g' /etc/apache2/sites-available/000-default.conf \
  && mv /var/www/html /var/www/public \
