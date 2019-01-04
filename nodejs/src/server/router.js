@@ -54,4 +54,12 @@ module.exports = (app) => {
       "data": req.body
     })
   });
+
+  app.post("/api/teste", (req, res) => {
+    console.log("Corpo da Requisicao:\r\n" + JSON.stringify(req.body, null, '\t'));
+    res.send({
+      "message": "Respondido pelo node",
+      "data": req.body
+    })
+  });
 };
