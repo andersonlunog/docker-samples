@@ -39,6 +39,33 @@ return [
                     ],
                 ],
             ],
+            'aplicacao.rest.register-subscriber' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/api/register-subscriber[/:register_subscriber_id]',
+                    'defaults' => [
+                        'controller' => 'Aplicacao\\V1\\Rest\\RegisterSubscriber\\Controller',
+                    ],
+                ],
+            ],
+            'aplicacao.rest.doctrine.publisher' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/api/publisher[/:publisher_id]',
+                    'defaults' => [
+                        'controller' => 'Aplicacao\\V1\\Rest\\Publisher\\Controller',
+                    ],
+                ],
+            ],
+            'aplicacao.rest.doctrine.subscriber' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/api/subscriber[/:subscriber_id]',
+                    'defaults' => [
+                        'controller' => 'Aplicacao\\V1\\Rest\\Subscriber\\Controller',
+                    ],
+                ],
+            ],
         ],
     ],
     'zf-versioning' => [
@@ -47,6 +74,9 @@ return [
             1 => 'aplicacao.rpc.http-client',
             2 => 'aplicacao.rest.doctrine.oauth-users',
             3 => 'aplicacao.rest.register-publisher',
+            5 => 'aplicacao.rest.register-subscriber',
+            6 => 'aplicacao.rest.doctrine.publisher',
+            7 => 'aplicacao.rest.doctrine.subscriber',
         ],
     ],
     'zf-rest' => [
@@ -112,6 +142,67 @@ return [
             'collection_class' => \Aplicacao\V1\Rest\RegisterPublisher\RegisterPublisherCollection::class,
             'service_name' => 'RegisterPublisher',
         ],
+        'Aplicacao\\V1\\Rest\\RegisterSubscriber\\Controller' => [
+            'listener' => \Aplicacao\V1\Rest\RegisterSubscriber\RegisterSubscriberResource::class,
+            'route_name' => 'aplicacao.rest.register-subscriber',
+            'route_identifier_name' => 'register_subscriber_id',
+            'collection_name' => 'register_subscriber',
+            'entity_http_methods' => [],
+            'collection_http_methods' => [
+                0 => 'GET',
+                1 => 'POST',
+            ],
+            'collection_query_whitelist' => [],
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => \Aplicacao\V1\Rest\RegisterSubscriber\RegisterSubscriberEntity::class,
+            'collection_class' => \Aplicacao\V1\Rest\RegisterSubscriber\RegisterSubscriberCollection::class,
+            'service_name' => 'RegisterSubscriber',
+        ],
+        'Aplicacao\\V1\\Rest\\Publisher\\Controller' => [
+            'listener' => \Aplicacao\V1\Rest\Publisher\PublisherResource::class,
+            'route_name' => 'aplicacao.rest.doctrine.publisher',
+            'route_identifier_name' => 'publisher_id',
+            'entity_identifier_name' => 'id',
+            'collection_name' => 'publisher',
+            'entity_http_methods' => [
+                0 => 'GET',
+                1 => 'PUT',
+                2 => 'DELETE',
+            ],
+            'collection_http_methods' => [
+                0 => 'GET',
+                1 => 'POST',
+            ],
+            'collection_query_whitelist' => [],
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => \Application\Entity\Publisher::class,
+            'collection_class' => \Aplicacao\V1\Rest\Publisher\PublisherCollection::class,
+            'service_name' => 'Publisher',
+        ],
+        'Aplicacao\\V1\\Rest\\Subscriber\\Controller' => [
+            'listener' => \Aplicacao\V1\Rest\Subscriber\SubscriberResource::class,
+            'route_name' => 'aplicacao.rest.doctrine.subscriber',
+            'route_identifier_name' => 'subscriber_id',
+            'entity_identifier_name' => 'id',
+            'collection_name' => 'subscriber',
+            'entity_http_methods' => [
+                0 => 'GET',
+                1 => 'PUT',
+                2 => 'DELETE',
+            ],
+            'collection_http_methods' => [
+                0 => 'GET',
+                1 => 'POST',
+            ],
+            'collection_query_whitelist' => [],
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => \Application\Entity\Subscriber::class,
+            'collection_class' => \Aplicacao\V1\Rest\Subscriber\SubscriberCollection::class,
+            'service_name' => 'Subscriber',
+        ],
     ],
     'zf-content-negotiation' => [
         'controllers' => [
@@ -119,6 +210,9 @@ return [
             'Aplicacao\\V1\\Rpc\\HttpClient\\Controller' => 'Json',
             'Aplicacao\\V1\\Rest\\OauthUsers\\Controller' => 'HalJson',
             'Aplicacao\\V1\\Rest\\RegisterPublisher\\Controller' => 'HalJson',
+            'Aplicacao\\V1\\Rest\\RegisterSubscriber\\Controller' => 'HalJson',
+            'Aplicacao\\V1\\Rest\\Publisher\\Controller' => 'HalJson',
+            'Aplicacao\\V1\\Rest\\Subscriber\\Controller' => 'HalJson',
         ],
         'accept_whitelist' => [
             'Aplicacao\\V1\\Rest\\User\\Controller' => [
@@ -141,6 +235,21 @@ return [
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ],
+            'Aplicacao\\V1\\Rest\\RegisterSubscriber\\Controller' => [
+                0 => 'application/vnd.aplicacao.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
+            'Aplicacao\\V1\\Rest\\Publisher\\Controller' => [
+                0 => 'application/vnd.aplicacao.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
+            'Aplicacao\\V1\\Rest\\Subscriber\\Controller' => [
+                0 => 'application/vnd.aplicacao.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
         ],
         'content_type_whitelist' => [
             'Aplicacao\\V1\\Rest\\User\\Controller' => [
@@ -156,6 +265,18 @@ return [
                 1 => 'application/json',
             ],
             'Aplicacao\\V1\\Rest\\RegisterPublisher\\Controller' => [
+                0 => 'application/vnd.aplicacao.v1+json',
+                1 => 'application/json',
+            ],
+            'Aplicacao\\V1\\Rest\\RegisterSubscriber\\Controller' => [
+                0 => 'application/vnd.aplicacao.v1+json',
+                1 => 'application/json',
+            ],
+            'Aplicacao\\V1\\Rest\\Publisher\\Controller' => [
+                0 => 'application/vnd.aplicacao.v1+json',
+                1 => 'application/json',
+            ],
+            'Aplicacao\\V1\\Rest\\Subscriber\\Controller' => [
                 0 => 'application/vnd.aplicacao.v1+json',
                 1 => 'application/json',
             ],
@@ -197,6 +318,40 @@ return [
                 'route_identifier_name' => 'register_publisher_id',
                 'is_collection' => true,
             ],
+            \Aplicacao\V1\Rest\RegisterSubscriber\RegisterSubscriberEntity::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'aplicacao.rest.register-subscriber',
+                'route_identifier_name' => 'register_subscriber_id',
+                'hydrator' => \Zend\Hydrator\ArraySerializable::class,
+            ],
+            \Aplicacao\V1\Rest\RegisterSubscriber\RegisterSubscriberCollection::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'aplicacao.rest.register-subscriber',
+                'route_identifier_name' => 'register_subscriber_id',
+                'is_collection' => true,
+            ],
+            \Application\Entity\Publisher::class => [
+                'route_identifier_name' => 'publisher_id',
+                'entity_identifier_name' => 'id',
+                'route_name' => 'aplicacao.rest.doctrine.publisher',
+                'hydrator' => 'Aplicacao\\V1\\Rest\\Publisher\\PublisherHydrator',
+            ],
+            \Aplicacao\V1\Rest\Publisher\PublisherCollection::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'aplicacao.rest.doctrine.publisher',
+                'is_collection' => true,
+            ],
+            \Application\Entity\Subscriber::class => [
+                'route_identifier_name' => 'subscriber_id',
+                'entity_identifier_name' => 'id',
+                'route_name' => 'aplicacao.rest.doctrine.subscriber',
+                'hydrator' => 'Aplicacao\\V1\\Rest\\Subscriber\\SubscriberHydrator',
+            ],
+            \Aplicacao\V1\Rest\Subscriber\SubscriberCollection::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'aplicacao.rest.doctrine.subscriber',
+                'is_collection' => true,
+            ],
         ],
     ],
     'zf-apigility' => [
@@ -208,6 +363,14 @@ return [
             \Aplicacao\V1\Rest\OauthUsers\OauthUsersResource::class => [
                 'object_manager' => 'doctrine.entitymanager.orm_default',
                 'hydrator' => 'Aplicacao\\V1\\Rest\\OauthUsers\\OauthUsersHydrator',
+            ],
+            \Aplicacao\V1\Rest\Publisher\PublisherResource::class => [
+                'object_manager' => 'doctrine.entitymanager.orm_default',
+                'hydrator' => 'Aplicacao\\V1\\Rest\\Publisher\\PublisherHydrator',
+            ],
+            \Aplicacao\V1\Rest\Subscriber\SubscriberResource::class => [
+                'object_manager' => 'doctrine.entitymanager.orm_default',
+                'hydrator' => 'Aplicacao\\V1\\Rest\\Subscriber\\SubscriberHydrator',
             ],
         ],
     ],
@@ -226,6 +389,20 @@ return [
             'strategies' => [],
             'use_generated_hydrator' => true,
         ],
+        'Aplicacao\\V1\\Rest\\Publisher\\PublisherHydrator' => [
+            'entity_class' => \Application\Entity\Publisher::class,
+            'object_manager' => 'doctrine.entitymanager.orm_default',
+            'by_value' => true,
+            'strategies' => [],
+            'use_generated_hydrator' => true,
+        ],
+        'Aplicacao\\V1\\Rest\\Subscriber\\SubscriberHydrator' => [
+            'entity_class' => \Application\Entity\Subscriber::class,
+            'object_manager' => 'doctrine.entitymanager.orm_default',
+            'by_value' => true,
+            'strategies' => [],
+            'use_generated_hydrator' => true,
+        ],
     ],
     'zf-content-validation' => [
         'Aplicacao\\V1\\Rest\\User\\Controller' => [
@@ -239,6 +416,15 @@ return [
         ],
         'Aplicacao\\V1\\Rest\\RegisterPublisher\\Controller' => [
             'input_filter' => 'Aplicacao\\V1\\Rest\\RegisterPublisher\\Validator',
+        ],
+        'Aplicacao\\V1\\Rest\\RegisterSubscriber\\Controller' => [
+            'input_filter' => 'Aplicacao\\V1\\Rest\\RegisterSubscriber\\Validator',
+        ],
+        'Aplicacao\\V1\\Rest\\Publisher\\Controller' => [
+            'input_filter' => 'Aplicacao\\V1\\Rest\\Publisher\\Validator',
+        ],
+        'Aplicacao\\V1\\Rest\\Subscriber\\Controller' => [
+            'input_filter' => 'Aplicacao\\V1\\Rest\\Subscriber\\Validator',
         ],
     ],
     'input_filter_specs' => [
@@ -357,6 +543,104 @@ return [
                 'name' => 'channel',
                 'field_type' => 'String',
             ],
+            1 => [
+                'required' => true,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'data',
+            ],
+        ],
+        'Aplicacao\\V1\\Rest\\RegisterSubscriber\\Validator' => [
+            0 => [
+                'required' => true,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'dns',
+            ],
+            1 => [
+                'required' => true,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'channel',
+            ],
+        ],
+        'Aplicacao\\V1\\Rest\\Publisher\\Validator' => [
+            0 => [
+                'name' => 'channel',
+                'required' => true,
+                'filters' => [
+                    0 => [
+                        'name' => \Zend\Filter\StringTrim::class,
+                    ],
+                    1 => [
+                        'name' => \Zend\Filter\StripTags::class,
+                    ],
+                ],
+                'validators' => [
+                    0 => [
+                        'name' => \Zend\Validator\StringLength::class,
+                        'options' => [
+                            'min' => 1,
+                            'max' => 255,
+                        ],
+                    ],
+                ],
+            ],
+            1 => [
+                'name' => 'receivers',
+                'required' => true,
+                'filters' => [
+                    0 => [
+                        'name' => \Zend\Filter\StringTrim::class,
+                    ],
+                    1 => [
+                        'name' => \Zend\Filter\StripTags::class,
+                    ],
+                ],
+                'validators' => [],
+            ],
+        ],
+        'Aplicacao\\V1\\Rest\\Subscriber\\Validator' => [
+            0 => [
+                'name' => 'channel',
+                'required' => true,
+                'filters' => [
+                    0 => [
+                        'name' => \Zend\Filter\StringTrim::class,
+                    ],
+                    1 => [
+                        'name' => \Zend\Filter\StripTags::class,
+                    ],
+                ],
+                'validators' => [
+                    0 => [
+                        'name' => \Zend\Validator\StringLength::class,
+                        'options' => [
+                            'min' => 1,
+                            'max' => 255,
+                        ],
+                    ],
+                ],
+            ],
+            1 => [
+                'name' => 'dns',
+                'required' => true,
+                'filters' => [
+                    0 => [
+                        'name' => \Zend\Filter\StringTrim::class,
+                    ],
+                    1 => [
+                        'name' => \Zend\Filter\StripTags::class,
+                    ],
+                ],
+                'validators' => [],
+            ],
+            2 => [
+                'required' => true,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'url',
+            ],
         ],
     ],
     'controllers' => [
@@ -397,6 +681,7 @@ return [
         'factories' => [
             \Aplicacao\V1\Rest\RegisterPublisher\RegisterPublisherResource::class => \Aplicacao\V1\Rest\RegisterPublisher\RegisterPublisherResourceFactory::class,
             'MQManagerFactory' => \Aplicacao\Factories\MQManagerFactory::class,
+            \Aplicacao\V1\Rest\RegisterSubscriber\RegisterSubscriberResource::class => \Aplicacao\V1\Rest\RegisterSubscriber\RegisterSubscriberResourceFactory::class,
         ],
     ],
 ];

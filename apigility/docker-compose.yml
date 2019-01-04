@@ -21,7 +21,7 @@ services:
       databaseUser: root
       databasePwd: passdev
       databaseName: test_db
-      XDEBUG_CONFIG: remote_host=192.168.2.94 remote_port=9000 remote_enable=1
+      XDEBUG_CONFIG: remote_host=192.168.2.99 remote_port=9000 remote_enable=1
     # links:
     #   - "db"
     networks:

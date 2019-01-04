@@ -61,10 +61,10 @@ COPY php.ini.sample /usr/local/etc/php/php.ini
 RUN echo "date.timezone=UTC" > $PHP_INI_DIR/conf.d/date_timezone.ini
 
 # Cria grupo 1001
-RUN getent group 1001 || groupadd web -g 1001
+RUN getent group 1000 || groupadd web -g 1000
 
 # Cria usuario 1001
-RUN getent passwd 1001 || adduser --uid 1001 --gid 1001 --disabled-password --gecos "" web
+RUN getent passwd 1000 || adduser --uid 1000 --gid 1000 --disabled-password --gecos "" web
 
 RUN usermod -a -G web www-data
 

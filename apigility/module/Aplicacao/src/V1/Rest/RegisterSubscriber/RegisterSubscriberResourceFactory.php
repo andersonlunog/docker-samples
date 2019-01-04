@@ -1,12 +1,12 @@
 <?php
-namespace Aplicacao\V1\Rest\RegisterPublisher;
+namespace Aplicacao\V1\Rest\RegisterSubscriber;
 
-class RegisterPublisherResourceFactory
+class RegisterSubscriberResourceFactory
 {
     public function __invoke($services)
     {
         $mqManager = $services->get('MQManagerFactory');
         $entityManager = $services->get('Doctrine\ORM\EntityManager');
-        return new RegisterPublisherResource($mqManager, $entityManager);
+        return new RegisterSubscriberResource($entityManager, $mqManager);
     }
 }

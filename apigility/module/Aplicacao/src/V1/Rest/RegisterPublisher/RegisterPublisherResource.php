@@ -9,10 +9,18 @@ use PhpAmqpLib\Message\AMQPMessage;
 class RegisterPublisherResource extends AbstractResourceListener
 {
 
+    /**
+     * @var \Aplicacao\Factories\MQManager
+     */
     protected $mqManager;
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
+    protected $entityManager;
 
-    public function __construct($mq) {
-        $this->$mqManager = $mq;
+    public function __construct($mq, $em) {
+        $this->mqManager = $mq;
+        $this->entityManager = $em;
     }
 
     /**
@@ -23,7 +31,36 @@ class RegisterPublisherResource extends AbstractResourceListener
      */
     public function create($data)
     {
-        $this->$mqManager->publish('Hello World!!!');
+//        $qb = $this->entityManager->createQueryBuilder();
+//        $qb->select('p')
+//                ->from('Application\Entity\Publisher', 'p')
+//                ->where('p.channel = :channel')
+//                ->setParameters(['channel' => $data->channel]);
+//        $publisher = $qb->getQuery()->getOneOrNullResult();
+//        print_r($publisher->getReceivers());die;
+        
+        $repository = $this->entityManager->getRepository(\Application\Entity\Publisher::class);
+        /* @var $publisher \Application\Entity\Publisher */
+        $publisher = $repository->findOneBy(["channel" => $data->channel]);
+        if ($publisher == null) {
+            echo "Não foi encontrado emissro com canal $data->channel";
+            return;
+        }
+        $receivers = explode("|", $publisher->getReceivers());
+
+        foreach ($receivers as $receiver) {
+            $channel = "{$data->channel}_{$receiver}";
+            $msg = $data->data;
+            $this->mqManager->publish($channel, $msg);
+        }
+        
+//        die;
+//        
+//        $publisher = new \Application\Entity\Publisher();
+//        $publisher->setChannel($data->channel);
+//        $publisher->setReceivers($data->receivers);
+//        $this->entityManager->persist($publisher);
+//        $this->entityManager->flush();
     }
 
     /**
@@ -33,11 +70,7 @@ class RegisterPublisherResource extends AbstractResourceListener
      * @return ApiProblem|mixed
      */
     public function fetchAll($params = [])
-    {
-        // $msg = $this->$mqManager->get();
-        $msg = $this->$mqManager->startReceive();
-        echo "Mensagem: " . $msg;die;
-                
+    {                
         // return new ApiProblem(405, 'The GET method has not been defined for collections');
     }
 

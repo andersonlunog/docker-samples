@@ -15,6 +15,11 @@ class MQManager implements MQManagerInterface
     protected function connect() {
         $connection = new AMQPStreamConnection('rabbitmq_php', 5672, 'admin', 'admin');
         $this->channel = $connection->channel();
+        $this->channel->basic_qos(null, 1, null);
+        error_log("[x] Conectou no RabbitMQ!!!");
+    }
+
+    public function publish($channel, $message) {
         /* @param string $queue
         * @param bool $passive
         * @param bool $durable
@@ -24,13 +29,9 @@ class MQManager implements MQManagerInterface
         * @param array $arguments
         * @param int $ticket
         */
-        $this->channel->queue_declare('hello', false, true, false, false);
-        $this->channel->basic_qos(null, 1, null);
-        error_log("[x] Conectou no RabbitMQ!!!");
-    }
-
-    public function publish($message) {
-        $msg = new AMQPMessage($message, ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]);
+        $this->channel->queue_declare($channel, false, true, false, false);
+                
+        $msg = new AMQPMessage(json_encode($message), ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]);
         /*
         * @param AMQPMessage $msg
         * @param string $exchange
@@ -38,9 +39,10 @@ class MQManager implements MQManagerInterface
         * @param bool $mandatory
         * @param bool $immediate
         */
-        $this->channel->basic_publish($msg, '', 'hello');
-        
-        error_log("[x] Sent $message");
+        $this->channel->basic_publish($msg, '', $channel);
+
+        error_log("..... Mensagem: $message");
+        error_log("..... Canal: $channel");
 
         return true;
     }
@@ -58,17 +60,28 @@ class MQManager implements MQManagerInterface
         return $messageBody;
     }
 
-    public function startReceive() {
-        error_log(" [*] Waiting for messages. To exit press CTRL+C\n");
+    public function startReceive($channel, $callback) {
+        error_log(" ........... Iniciando captura de mensagens no canal " . $channel);
 
-        $callback = function ($msg) {
+        $cb = function ($msg) {
             error_log(' [x] Mensagem recebida: ' . $msg->body . "\n");
-            $this->sendExternal($msg->body);
+//            $this->sendExternal($msg->body);
             error_log(' [x] Mensagem externada: ' . $msg->body . "\n");
             $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
             // $msg->delivery_info['channel']->basic_cancel($msg->delivery_info['consumer_tag']);
         };
 
+        /* @param string $queue
+        * @param bool $passive
+        * @param bool $durable
+        * @param bool $exclusive
+        * @param bool $auto_delete
+        * @param bool $nowait
+        * @param array $arguments
+        * @param int $ticket
+        */
+        $this->channel->queue_declare($channel, false, true, false, false);
+        
         /*
         * @param string $queue
         * @param string $consumer_tag
@@ -80,21 +93,23 @@ class MQManager implements MQManagerInterface
         * @param int|null $ticket
         * @param array $arguments
         */
-        $this->channel->basic_consume('hello', '', false, false, false, false, $callback);
+        $this->channel->basic_consume($channel, '', false, false, false, false, $callback);
+        error_log("........ criou o cosumidor");
 
         $i = 0;
         while (count($this->channel->callbacks)) {
+            error_log("........ Iniciando espera n. " . $i);
             $this->channel->wait();
-            error_log("[x] ===> mensagem nº ".$i++);
+            error_log("[x] ===> mensagem n. ".$i++);
         }
     }
 
-    protected function sendExternal($message)
+    public function sendExternal($url, $message)
     {
         // $params = Json::decode($this->getRequest()->getContent());
 
         $client = new Client();
-        $client->setUri('http://192.168.2.94:3000/api/receiveMessage');
+        $client->setUri($url);
         $client->setMethod('POST');
         $client->setParameterPost([
             "message"  => $message

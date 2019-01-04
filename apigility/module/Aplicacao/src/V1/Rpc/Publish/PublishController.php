@@ -1,13 +1,13 @@
 <?php
-namespace Aplicacao\V1\Rpc\HttpClient;
+namespace Aplicacao\V1\Rpc\Publish;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Json\Json;
 use Zend\Http\Client;
 
-class HttpClientController extends AbstractActionController
+class PublishController extends AbstractActionController
 {
-    public function httpClientAction()
+    public function publishAction()
     {
         $params = Json::decode($this->getRequest()->getContent());
         // print_r($params);
