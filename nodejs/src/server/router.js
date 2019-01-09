@@ -1,5 +1,6 @@
 const amqp = require('amqplib');
 const environment = require("./config/environment")();
+const RequisicaoModel = require("./model/requisicao");
 
 module.exports = (app) => {
   var channel;
@@ -56,10 +57,20 @@ module.exports = (app) => {
   });
 
   app.post("/api/teste", (req, res) => {
-    console.log("Corpo da Requisicao:\r\n" + JSON.stringify(req.body, null, '\t'));
-    res.send({
-      "message": "Respondido pelo node",
-      "data": req.body
+    // console.log("Corpo da Requisicao:\r\n" + JSON.stringify(req.body, null, '\t'));
+
+    var req = new RequisicaoModel({
+      moment: new Date(),
+      data: req.body
+    });
+    
+    req.save().then((r) => {
+      res.send({
+        "message": "Respondido pelo node",
+        "data": r
+      })
+    }).catch((err) => {
+      res.status(400).send(err);
     })
   });
 };
